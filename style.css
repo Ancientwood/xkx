@@ -181,6 +181,10 @@ p.choice a {
     width:100%; 
     height:36px; 
     line-height:1.7em;  
+    position:fixed; 
+    bottom:0px; 
+    left:0px; 
+    text-align:center;
     color:#515C6B;
     background:#FFFEFA;
 }
