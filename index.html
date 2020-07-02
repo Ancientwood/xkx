@@ -34,7 +34,7 @@
                 <h1>侠客行</h1>
                 <h2 class="byline"></h2>
             </div>
-                <pre id="map_lxsz" style="display:none">
+                <pre id="map_lxsz">
                      藏书阁
                        │
        男浴室        尚武堂               女浴室
@@ -86,10 +86,10 @@
 	<script src="ink.js"></script>
     <script src="xkx.js"></script>
     <script src="main.js"></script>
-    <script>
+    <script>		
 		function showMap(){
 			var map = document.getElementById("map_lxsz");
-			map.style.display = "block";
+			map.style.display = "inline";
 			var story = document.getElementById('story');
 			story.append(map);
 		}
