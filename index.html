@@ -86,8 +86,22 @@
 	<script src="ink.js"></script>
     <script src="xkx.js"></script>
     <script src="main.js"></script>
-    <script>		
+    <script>
+		var start = false;
+		if(start == false){
+			var menus = document.getElementsByClassName('choice');
+			for (var i=0; i < menus.length; i++) {
+				menus[i].onclick = function(){
+					start = true;
+				}
+			};
+		}
+		
 		function showMap(){
+			if(!start){
+				console.log("江湖子弟江湖老。");
+				return;
+			}
 			var map = document.getElementById("map_lxsz");
 			map.style.display = "inline";
 			var story = document.getElementById('story');
