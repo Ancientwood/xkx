@@ -1,7 +1,6 @@
 INCLUDE chapter/1.ink
 INCLUDE chapter/2.ink
 INCLUDE chapter/3.ink
-INCLUDE map/lxsz.ink
 
 # author: Anc
 
