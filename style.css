@@ -1,10 +1,12 @@
 @import url('https://fonts.googleapis.com/css?family=Noto+Sans+SC:300,700&display=swap&subset=chinese-simplified');
 
+::-webkit-scrollbar {display:none}
 
 body {
     font-family: Kaiti,'Noto Sans SC', sans-serif;
     font-weight: lighter;
     background: #FFFFFF;
+    overflow: hidden;
 }
 
 body.dark {
@@ -224,8 +226,21 @@ p.choice a:hover {
 /* Map
 */
 #map_lxsz{
-	float:right;
+	position: fixed;
+	background-color: #80808017;
+  left: 10px;
+  top: 10px;
 	display:none;
-	margin: 5px; border: 1px solid black;
+	margin: 5px; 
 	font-family: Kaiti,'Noto Sans SC', Georgia, 'Times New Roman', Times, serif;
+}
+
+@media (max-width: 800px) {
+  #map_lxsz{
+    position: initial;
+    background-color: #FFF;
+    display:none;
+    margin: 5px; 
+    font-family: Kaiti,'Noto Sans SC', Georgia, 'Times New Roman', Times, serif;
+  }
 }

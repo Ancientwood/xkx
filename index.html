@@ -80,6 +80,7 @@
         </script>
     </div>
     <div class="foot">
+        <a href="#story" style="text-decoration:none;">【侠客行】</a>
         <a href="#gitalk-container" style="text-decoration:none;">【江湖驿站】</a>
         <a id="map" href="#" onclick="showMap()" style="text-decoration:none;">【江湖堪舆】</a>
     </div>
@@ -88,6 +89,7 @@
     <script src="main.js"></script>
     <script>
 		var start = false;
+		var show = false;
 		if(start == false){
 			var menus = document.getElementsByClassName('choice');
 			for (var i=0; i < menus.length; i++) {
@@ -103,9 +105,16 @@
 				return;
 			}
 			var map = document.getElementById("map_lxsz");
-			map.style.display = "inline";
-			var story = document.getElementById('story');
-			story.append(map);
+			var story = document.getElementById("story");
+			if(show){
+        map.style.display = "none";
+        show = false;
+			} else {
+        map.style.display = "block";
+        story.append(map);
+        show = true;
+			}
+						
 		}
     </script>
 </body>
