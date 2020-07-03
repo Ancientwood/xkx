@@ -8,7 +8,8 @@
 
 - [x] G A 统计
 - [x] 评论系统
-- [ ] 主题美化
+- [x] 主题美化
+- [ ] 自定义样式
 - [ ] 地图系统
 - [ ] 装备系统
 
@@ -73,6 +74,14 @@ function 函数
 # LOOP: myBgms/bgm.mp3 背景音乐循环
 # STOP 停止播放
 ```
+
+## 自定义CSS
+
+多个 `class` 写多个用分号分隔,例如: `#CLASS:blod;#CLASS:red`。
+
+目前不支持给选项 `choice` 添加新的 `class`。
+
+具体列表见 `style.css`。
 
 ## Contributing
 

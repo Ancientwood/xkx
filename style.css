@@ -244,3 +244,56 @@ p.choice a:hover {
     font-family: Kaiti,'Noto Sans SC', Georgia, 'Times New Roman', Times, serif;
   }
 }
+
+/* Font Style
+*/
+.bold{
+	font-weight:bold;
+}
+.bolder{
+	font-weight:bolder;
+}
+.lighter{
+	font-weight:bolder;
+}
+.italic{
+	font-style:italic;
+}
+
+.underline{
+	text-decoration:underline;
+}
+.overline{
+	text-decoration:overline;
+}
+.thoughline{
+	text-decoration:line-through;
+}
+
+.red{
+	color:red;
+}
+.green{
+	color:green;
+}
+.yellow{
+	color:yellow;
+}
+.blue{
+	color:blue;
+}
+.white{
+	color:white;
+}
+.black{
+	color:black;
+}
+.silver{
+	color:silver;
+}
+.gray{
+	color:gray;
+}
+.search{
+	background: url('images/search.png') no-repeat 100% 0;
+}
