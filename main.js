@@ -89,7 +89,7 @@
                 //bgm stop
                 else if( tag == "STOP" ){
                     let audios = document.getElementsByTagName("audio");
-                    for(let i = 0; i < audios.length; i ++){
+                    for(let i = audios.length-1; i > 0; i --){
                         audios[i].pause();
                         audios[i].remove(); 
                     }
