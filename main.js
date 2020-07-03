@@ -3,6 +3,7 @@
     // Create ink story from the content using inkjs
     var story = new inkjs.Story(storyContent);
 
+
     // Global tags - those at the top of the ink file
     // We support:
     //  # theme: dark
@@ -66,6 +67,32 @@
 
                     showAfter(delay, imageElement);
                     delay += 200.0;
+                }
+
+                //bgm or sfx
+                else if( splitTag && splitTag.property == "AUDIO" ){
+                    let audio = new Audio();
+                    audio.src = splitTag.val;
+                    storyContainer.appendChild(audio);
+                    audio.play();
+                }
+                
+                //loop
+                else if( splitTag && splitTag.property == "LOOP" ){
+                    let audio = new Audio();
+                    audio.src = splitTag.val;
+                    storyContainer.appendChild(audio);
+                    audio.play();
+                    audio.loop = true;
+                }
+
+                //bgm stop
+                else if( tag == "STOP" ){
+                    let audios = document.getElementsByTagName("audio");
+                    for(let i = 0; i < audios.length; i ++){
+                        audios[i].pause();
+                        audios[i].remove(); 
+                    }
                 }
 
                 // CLASS: className

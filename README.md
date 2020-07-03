@@ -60,6 +60,20 @@ temp 临时变量
 function 函数
 ```
 
+## 多媒体支持
+
+```
+# theme: dark 暗色主题
+# author: 作者
+# CLEAR 清空屏幕
+# IMAGE: myImages/imageName.jpg 插入图片
+# CLASS: 自定义CSS类
+# RESTART 重新开始
+# AUDIO: myBgms/bgm.mp3 背景音乐
+# LOOP: myBgms/bgm.mp3 背景音乐循环
+# STOP 停止播放
+```
+
 ## Contributing
 
 1. Fork the Project
