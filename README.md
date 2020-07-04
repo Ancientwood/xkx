@@ -64,6 +64,157 @@ temp 临时变量
 function 函数
 ```
 
+## 高级技巧
+
+#### 线程
+
+线程 `<-` 可以将多个部分连接在一起
+
+```
+->kitchen
+== kitchen ==
+你来到了厨房
+<- conversation
+<- walking
+-> DONE //标志线程的结束
+
+== conversation ==
+ * 晚上吃什么
+    大厨说道："吃鸡"
+ - -> kitchen
+
+== walking ==
+ + [离开]
+    -> out
+
+== out ==
+你离开了厨房
+-> END
+```
+
+输出
+
+```
+你来到了厨房
+1.晚上吃什么
+2.离开
+```
+
+#### 列表
+
+列表关键字 `LIST` 
+
+状态机
+
+```
+->begin
+=begin
+LIST role_emotion = happy, sad, angry
+
+VAR zhangsan_emotion = happy
+VAR lisi_emotion = angry
+
+{zhangsan_emotion}
+{lisi_emotion}
+->END
+```
+
+列表循环
+
+```
+//第一个值对应序号为1而不是0，可以通过LIST_VALUE获取
+LIST volumeLevel = off, quiet, medium, loud, deafening
+VAR lecturersVolume = quiet
+VAR murmurersVolume = quiet
+
+-(loop)
+{ 
+    -lecturersVolume < deafening:
+        //循环输出值
+        {lecturersVolume}
+        
+        //状态值对应序号
+        ~ temp index =  LIST_VALUE(lecturersVolume)
+        {index}
+        
+        //序号对应状态值
+        {volumeLevel(index)}
+	    ~ lecturersVolume++
+    -else:
+        ->END
+}
++[loop] 
+->loop
+```
+
+列表多值选中
+
+```
+//列表自定义值
+LIST primeNumbers = two = 2, three = 3, five = 5
+
+LIST DoctorsInSurgery = (Adams=8), Bernard=10, (Cartwright), (Denver), (Eamonn)
+//打印选中的值
+{DoctorsInSurgery}
+
+//进行清空
+~ DoctorsInSurgery = ()
+{DoctorsInSurgery}
+
+//增加选中
+~ DoctorsInSurgery += (Adams, Bernard, Cartwright, Denver)
+{DoctorsInSurgery}
+
+//删除选中
+~ DoctorsInSurgery += (Bernard)
+{DoctorsInSurgery}
+
+//函数测试
+{LIST_COUNT(DoctorsInSurgery)} //输出选中的值
+{LIST_MIN(DoctorsInSurgery)} 	 //输出序号最小的值
+{LIST_MAX(DoctorsInSurgery)} 	 //输出序号最大的值
+{LIST_RANDOM(DoctorsInSurgery)}//随机输出一个值
+{LIST_ALL(element of list)}		 //输出完整的列表（未被选中也会输出）
+{LIST_RANGE(list_name, min_value, max_value)} //函数切片
+{LIST_INVERT(list_name)}			 //函数倒置
+
+//测试选中列表是否为空
+{ DoctorsInSurgery: The surgery is open today. | Everyone has gone home. }
+
+//测试选中列表是否相等
+{ DoctorsInSurgery == (Adams, Bernard):
+	Dr Adams and Dr Bernard are having a loud argument in one corner.
+}
+
+//测试是否在选中列表中
+//包含操作： ? 或者 has
+//不包含操作： !? 或者 hasnt
+{ DoctorsInSurgery ? (Adams, Bernard):
+	Dr Adams and Dr Bernard are having a hushed argument in one corner.
+}
+//相交列表
+{desiredValues ^ actualValues: The new president has at least one desirable quality.} 
+```
+
+##### 跟踪对象列表
+
+```
+LIST Characters = Alfred, Batman, Robin 
+LIST Props = champagne_glass, newspaper 
+
+VAR BallroomContents = (Alfred, Batman, newspaper) 
+VAR HallwayContents = (Robin, champagne_glass) 
+```
+
+##### 跟踪多个状态的列表
+
+```
+LIST OnOff = on, off 
+LIST HotCold = cold, warm, hot 
+
+VAR kettleState = off, cold 
+```
+
 ## 多媒体支持
 
 ```

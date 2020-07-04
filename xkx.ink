@@ -1,6 +1,9 @@
+INCLUDE global/role.ink
 INCLUDE chapter/1.ink
 INCLUDE chapter/2.ink
 INCLUDE chapter/3.ink
+
+
 
 # author: Anc & Finz & 319
 #IMAGE:images/xkx_1.png

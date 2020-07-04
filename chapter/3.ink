@@ -504,32 +504,32 @@ TODO 银两判断
     这里是男子浴室，浴室很开阔，浴桶一字排开，摆了十余具，底下还有可以加热生火的小灶。
     看来山庄的男仆都在此处洗浴。
 //逻辑判断
-{jq_nys_ashu_intro:
+{jq_ashu_intro:
     ->dh_nys
 }
-->jq_nys_ashu_intro
+->jq_ashu_intro
 
 //阿姝介绍剧情
-=jq_nys_ashu_intro
+=jq_ashu_intro
     阿姝说道：“你先在这里洗个澡，然后来见我们庄主吧，我就先回去了。”
     说完阿姝就小跑着往西厢房离去，好似生怕被男浴室玷污了眼睛
     跑到一半，阿姝突然想到什么，转过头来说道：“记得不要再跟随我了！”
     *[好吧，看来只能先洗个澡了]
-    ->gn_nys_xizhao
+    ->gn_xizhao
 //洗完澡后剧情
-=jq_nys_after_xizhao
+=jq_after_xizhao
     终于把澡洗完了，再去问问庄主关于闯荡江湖的事情吧。
     ->dh_nys
     
 //地图导航
 =dh_nys
     +[洗澡] 
-    ->gn_nys_xizhao
+    ->gn_xizhao
     +[返回西厢房] 
     ->cj_xxf
     
 //场景功能
-=gn_nys_xizhao
+=gn_xizhao
     你走向一桶烧好热水的浴桶，脱掉身上有些发臭的衣服
     跳进木桶中，水溅了一地。
     使劲搓着身上的灰，水一会就黑了。
@@ -537,8 +537,8 @@ TODO 银两判断
     水温刚刚好，你全身放松了下来。
     你洗完了澡，感到精神百倍！
 //逻辑判断
-{not jq_nys_after_xizhao:
-    ->jq_nys_after_xizhao
+{not jq_after_xizhao:
+    ->jq_after_xizhao
 }
     +[离开]
     ->cj_nys
