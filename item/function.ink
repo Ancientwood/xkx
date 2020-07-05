@@ -37,7 +37,7 @@ VAR end = ()
     
     //物品总数量大于0，显示每个物品的选项
     
-    +{items?id}查看【{get_item_name(LIST_VALUE(id))}】* {get_item_num(LIST_VALUE(id))}
+    +{items?id and LIST_COUNT(items) > 0}查看【{get_item_name(LIST_VALUE(id))}】* {get_item_num(LIST_VALUE(id))}
     
     //物品详情
     {get_item_intro(LIST_VALUE(id))}
