@@ -31,9 +31,13 @@ VAR end = ()
 //循环所使用的选项
 =show_choose(id,->go_back_temp)
 
+    {LIST_COUNT(items) == 0:
+        包裹里空空如也了。
+    }
+    
     //物品总数量大于0，显示每个物品的选项
-    //物品 * 数量 的选项
-    +{LIST_COUNT(items)>0}查看【{get_item_name(LIST_VALUE(id))}】* {get_item_num(LIST_VALUE(id))}
+    
+    +{items?id}查看【{get_item_name(LIST_VALUE(id))}】* {get_item_num(LIST_VALUE(id))}
     
     //物品详情
     {get_item_intro(LIST_VALUE(id))}
@@ -59,8 +63,18 @@ VAR end = ()
 ~add_item_num(LIST_VALUE(id))
 
 == function use_item(id)
-{get_item_num(LIST_VALUE(id)) == 1 :
-    ~items-=id
-}
-~del_item_num(LIST_VALUE(id))
+    //判断数量为1时且时消耗品的时候可以从包裹中移除
+    {get_item_num(LIST_VALUE(id)) == 1 && get_item_status(LIST_VALUE(id))?consumables:
+        ~items-=id
+    }
+    //判断是消耗品的时候才可以减少数量
+    {get_item_status(LIST_VALUE(id))?consumables:
+        ~del_item_num(LIST_VALUE(id))
+    }
+
+== function del_item(id)
+    {get_item_num(LIST_VALUE(id)) == 1:
+        ~items-=id
+    }
+     ~del_item_num(LIST_VALUE(id))
 
