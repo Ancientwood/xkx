@@ -233,7 +233,7 @@ VAR kettleState = off, cold
 
 ## 自定义CSS
 
-多个 `class` 写多个用分号分隔,例如: `#CLASS:blod;#CLASS:red`。
+多个 `class` 写多个用分号分隔,例如: `#CLASS:bold,red`。
 
 目前不支持给选项 `choice` 添加新的 `class`。
 

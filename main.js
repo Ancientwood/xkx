@@ -122,9 +122,18 @@
             storyContainer.appendChild(paragraphElement);
             
             // Add any custom classes derived from ink tags
-            for(var i=0; i<customClasses.length; i++)
-                paragraphElement.classList.add(customClasses[i]);
-
+            for(var i=0; i<customClasses.length; i++){
+                var temp = customClasses[i].split(",");
+                if(temp.length >= 2){
+                   for(var j=0; j<temp.length; j++){
+                      paragraphElement.classList.add(temp[j]);
+                      console.log(temp[j]);
+                   }
+                } else {
+                  paragraphElement.classList.add(customClasses[i]);
+                }
+            }
+            
             // Fade in paragraph after a short delay
             showAfter(delay, paragraphElement);
             delay += 200.0;
