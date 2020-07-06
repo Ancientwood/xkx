@@ -8,13 +8,14 @@
     在山谷的北侧有条陡峭的山坡隐隐可以通向外界。
 
     {
-     - not drink_hulu and num_yeguo != 0:
-        你现在有点渴，看看在这里能否找到些喝的。
-     TODO 人物属性，吃了多少而不是拥有多少野果
-     - drink_hulu and num_yeguo == 0:
-        你现在有点饿，看看在这里能否找到些吃的。
-     - else:
+     -role_status?(hungry,thirst):
         你现在又渴又饿，看看在这里能否找到些吃的喝的。
+
+     - role_status?hungry:
+        你现在有点饿，看看在这里能否找到些吃的。
+        
+     - role_status?thirst:
+     你现在有点渴，看看在这里能否找到些喝的。
     }
 
     -(action)
@@ -36,6 +37,62 @@
     
     + [查看【包裹】]
         ->list_item(->action)
+
+=river
+#AUDIO:audio/bird_1.mp3
+· 小溪
+    这是一条缓缓流动的小溪，溪水清澈而明亮。
+    {items!?(wp_hulu):
+    不远处的地上有着一个样式古朴的葫芦。
+    也许你可以拿起地上的葫芦，研究下用来盛溪水喝。
+    }
+    
+- (action)
+    {items?(wp_hulu):
+
+        + [使用【葫芦】]
+        {get_item_intro(wp_hulu)}
+        看来可以用来盛溪水和饮用。
+            ++ [【盛溪水】]->fill_hulu
+            ++ {role_status?thirst}[【饮用】]->drink_hulu
+            ->action
+    -else:
+        * [查看【葫芦】]
+        {get_item_intro(wp_hulu)}
+        
+        
+        ** [拾取【葫芦】]
+        你捡起了葫芦。
+        ~add_item(wp_hulu)
+        ->action
+    }
+    
+    + [查看【包裹】]
+        ->list_item(->action)
+
+    + [回到 · 未明谷]#STOP
+        ->valley
+
+=fill_hulu
+你将葫芦装满清水。
++ {role_status?thirst}[【饮用】]->drink_hulu
++ [回到 · 未明谷]->valley#STOP
+
+=drink_hulu
+{not fill_hulu:
+你举起葫芦摇了摇，里面却是空空如也。
+}
+{fill_hulu and role_status?thirst:
+{你拿起葫芦咕噜噜地喝了几口清水。|你再次拿起喝了几口清水。|你拿起葫芦润了下嘴。|你已经喝太多了，再也灌不下一滴水了。|你已经喝太多了。|你再也喝不下了。|。。。~set_role_status(nothirst)}
+}
++ [【盛溪水】]->fill_hulu
++ {role_status?thirst}[【饮用】]->drink_hulu
++ [回到 · 未明谷]->valley#STOP
+
+=path
+这是一段陡峭的山坡，应该可以向上攀爬出去。
++ [攀爬【山坡】]->climb
++ [回到 · 未明谷]->valley#STOP
 
 
 =west
@@ -197,56 +254,6 @@
 ~add_item(wp_yupei)
     ->east.action
 
-=river
-#AUDIO:audio/bird_1.mp3
-· 小溪
-这是一条清澈的小溪，也许你可以拿起地上的葫芦，研究下用来盛溪水喝。
-
-- (action)
-    {items?(wp_hulu):
-
-        + [使用【葫芦】]
-        {get_item_intro(LIST_VALUE(wp_hulu))}
-        看来可以用来盛溪水和饮用。
-            ++ [【盛溪水】]->fill_hulu
-            ++ [【饮用】]->drink_hulu
-            ->action
-    -else:
-        * [查看【葫芦】]
-        {get_item_intro(LIST_VALUE(wp_hulu))}
-        ->action
-        
-        * [拾取【葫芦】]
-        你捡起了葫芦。
-        ~add_item(wp_hulu)
-        ->action
-    }
-    
-    + [查看【包裹】]
-        ->list_item(->action)
-
-    + [回到 · 未明谷]#STOP
-        ->valley
-
-=fill_hulu
-你将葫芦装满清水。
-+ [【饮用】]->drink_hulu
-
-=drink_hulu
-{not fill_hulu:
-你举起葫芦摇了摇，里面却是空空如也。
-}
-{fill_hulu:
-{你拿起葫芦咕噜噜地喝了几口清水。|你再次拿起喝了几口清水。|你拿起葫芦润了下嘴。|你已经喝太多了，再也灌不下一滴水了。|你已经喝太多了。|你再也喝不下了。|。。。}
-}
-+ [【盛溪水】]->fill_hulu
-+ [【饮用】]->drink_hulu
-+ [回到 · 未明谷]->valley#STOP
-
-=path
-这是一段陡峭的山坡，应该可以向上攀爬出去。
-+ [攀爬【山坡】]->climb
-+ [回到 · 未明谷]->valley#STOP
 
 =climb
 {
