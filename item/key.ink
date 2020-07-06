@@ -4,4 +4,5 @@
 LIST items = 
 wp_yupei,
 wp_hulu, 
-wp_yeguo
+wp_yeguo,
+wp_lxph_piaoju

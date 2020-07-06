@@ -13,5 +13,6 @@ durable             //持久品
 -1:~return (durable)
 -2:~return (durable)
 -3:~return (consumables)
+-4:~return (durable)
 }
 
