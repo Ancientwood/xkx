@@ -3,8 +3,8 @@
 */
 == function get_item_name(id)
 {id:
--1:玉佩
--2:葫芦
--3:野果
--4:柳秀票号的票据
+-wp_yupei:玉佩
+-wp_hulu:葫芦
+-wp_yeguo:野果
+-wp_lxph_piaoju:柳秀票号的票据
 }

@@ -10,9 +10,9 @@ durable             //持久品
 
 == function get_item_status(id)
 {id:
--1:~return (durable)
--2:~return (durable)
--3:~return (consumables)
--4:~return (durable)
+-wp_yupei:~return (durable)
+-wp_hulu:~return (durable)
+-wp_yeguo:~return (consumables)
+-wp_lxph_piaoju:~return (durable)
 }
 
