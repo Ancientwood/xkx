@@ -3,7 +3,6 @@
 */
 == function get_item_name(id)
 {id:
--wp_qian:银两
 -wp_yupei:玉佩
 -wp_hulu:葫芦
 -wp_yeguo:野果
