@@ -14,7 +14,6 @@ INCLUDE global/number.ink
 
 
 
-
 # author: Anc & Finz & 319
 #IMAGE:images/xkx_1.png
 
