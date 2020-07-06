@@ -9,6 +9,8 @@ INCLUDE item/function.ink
 INCLUDE item/num.ink
 INCLUDE item/callback.ink
 INCLUDE item/status.ink
+INCLUDE global/number.ink
+
 
 
 

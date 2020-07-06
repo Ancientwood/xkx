@@ -37,7 +37,7 @@ VAR end = ()
     
     //物品总数量大于0，显示每个物品的选项
     //如果物品是消耗，显示对应数量
-    +{items?id and LIST_COUNT(items) > 0}查看【{get_item_name(LIST_VALUE(id))}】{get_item_status(LIST_VALUE(id))?consumables:* {get_item_num(LIST_VALUE(id))}}
+    +{items?id and LIST_COUNT(items) > 0}查看【{get_item_name(LIST_VALUE(id))}】{get_item_status(LIST_VALUE(id))?consumables: * 【{print_num(get_item_num(LIST_VALUE(id)))}}】
     
     //物品详情
     {get_item_intro(LIST_VALUE(id))}
