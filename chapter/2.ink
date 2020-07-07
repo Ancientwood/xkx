@@ -34,7 +34,6 @@
     + [往南走 · 去树林]
     ->south
     
-        
     + [往北走 · 去山坡]
     ->path
     
@@ -52,18 +51,22 @@
     }
     
 - (action)
-    {items?(wp_hulu):
-
-        + [使用【葫芦】]
-        {get_item_intro(wp_hulu)}
-        看来可以用来盛溪水和饮用。
-            ++ [【盛溪水】]->fill_hulu
-            ++ {role_status?thirst}[【饮用】]->drink_hulu
+    {
+    -items?(wp_hulu):
+        + [盛【溪水】]
+            {item_status?hulu_full:
+                {~葫芦里的水已经快满出来了。|葫芦已经满了。|这个葫芦已经装满了。}
+            -else:
+                你将葫芦装满清水。
+                {set_hulu_status(1)}
+            }
             ->action
+        
+        ++ [返回]->action
+        
     -else:
         * [查看【葫芦】]
         {get_item_intro(wp_hulu)}
-        
         
         ** [拾取【葫芦】]
         你捡起了葫芦。
@@ -77,23 +80,6 @@
     + [回到 · 未明谷]#STOP
         ->valley
 
-=fill_hulu
-你将葫芦装满清水。
-+ {role_status?thirst}[【饮用】]->drink_hulu
-+ [回到 · 未明谷]->valley#STOP
-
-=drink_hulu
-{not fill_hulu:
-你举起葫芦摇了摇，里面却是空空如也。
-}
-{fill_hulu and role_status?thirst:
-{你拿起葫芦咕噜噜地喝了几口清水。|你再次拿起喝了几口清水。|你拿起葫芦润了下嘴。|你已经喝饱了了。{set_role_status(nothirst)}|你已经喝太多了，再也灌不下一滴水了。|你再也喝不下了。|。。。}
-}
-+ [【盛溪水】]->fill_hulu
-+ {role_status?thirst}[【饮用】]->drink_hulu
-+ [回到 · 未明谷]->valley#STOP
-
-
 /*2*/
 =east
 · 青石桥头 
@@ -102,33 +88,33 @@
     不知道怎么，你一来到这里，似乎就有种英雄垂泪的无奈和悲凉之感。
     前方已然无路可走。
     
+    - (action)
     {role_status?thirst:
-        你现在有些渴，可以去桥下瞧瞧有没有干净的水源。
-    }
-    
-- (action)
-    + [下去【寻找】]
-     {
-        - not jq_qsqt:
-            ++ 断桥下石缝中似乎有什么东西
-            +++ 走过去看看
-                {
-                 - num_yeguo < 5:
-                    ->jq_qsqt
-                 - else:
-                     {&你兜里怀揣着几个野果，双手也环抱着几个，身上的野果太多了，行动太不方便了。|你身上的东西太多了，行动不便。}
-                     ->action
-                }
-        - else:
-         这里似乎什么都没有了。
-            ->action
-     } 
+        你感到有些渴，不妨去桥下瞧瞧有没有干净的水源。
+
+        + [下去【寻找】]
+         {
+            - not jq_qsqt:
+                ++ 断桥下石缝中似乎有什么东西
+                +++ 走过去看看
+                    {
+                     - num_yeguo < 5:
+                        ->jq_qsqt
+                     - else:
+                         {&你兜里怀揣着几个野果，双手也环抱着几个，身上的野果太多了，行动太不方便了。|你身上的东西太多了，行动不便。}
+                         ->action
+                    }
+            - else:
+             这里似乎什么都没有了。
+                ->action
+         } 
+         
+     }
      
     + [查看【包裹】]
         ->list_item(->action)
     
     + [回到 · 未明谷]->valley#STOP
-
 
 =jq_qsqt
 #AUDIO:audio/fight_4.mp3
@@ -252,22 +238,40 @@
 
 =path
 这是一段陡峭的山坡，应该可以向上攀爬出去。
+
+- (action)
 + [攀爬【山坡】]->climb
++ [查看【包裹】]
+    ->list_item(->action)
 + [回到 · 未明谷]->valley#STOP
 
 =climb
+#AUDIO:audio/breath_1.mp3
 {
--role_status?hungry and not wx_ty:
+-role_status?hungry and role_status?thirst:
+    {~山路陡峭难行，你现在又饿又渴，实在无力前行。|山路险峻，还是休整一下再来吧。|这段山路看着有些难爬，还是去树林找些果子填饱肚子再来吧。}
+    + [返回]->path.action
+    
+-role_status?hungry:
     {~这段山路看着有些陡峭难爬，还是填饱肚子再来吧。|山路险峻，还是休整一下再来吧。|这段山路看着有些难爬，还是去树林找些果子填饱肚子再来吧。}
-    + [回到 · 未明谷]->valley
+    +[。。。]
+    你饿着肚子又出了一身汗，变得又饿又渴了。#CLASS:bold
+    {set_role_status(thirst)}
+    
+        ++ [返回]->path.action
 
 
 - role_status?thirst:
     {~这段山路有些陡峭难爬，不一会你便感到口干舌燥，或许该找些喝的。|山路险峻，你感到口干舌燥，浑身无力|山路难行，你感到口干舌燥，或许该去溪边找些水喝。}
-    + [回到 · 未明谷]->valley
+    +[。。。]
+        
+    你的水分补充得不足，不得已只能停下攀爬的脚步，又白白浪费了体力。
+    你现在又饿又渴了。#CLASS:bold
+    {set_role_status(hungry)}
+    
+        ++ [返回]->path.action
     
 -role_status!?hungry and not wx_ty:
-    #AUDIO:audio/breath_1.mp3
     你用尽全力往上爬去，全身大汗淋漓。
     你心里想，万幸是吃饱喝足了过来。
     否则爬到一半没力了岂不是一命呜呼？
@@ -281,7 +285,7 @@
     ->top
     
  -wx_ty:
-    #AUDIO:audio/breath_1.mp3
+    
     + 你用尽全力向上攀爬。
 
     山路崎岖，你提气轻身，太乙心法在你体内游走一圈。

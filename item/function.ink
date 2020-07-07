@@ -54,7 +54,7 @@ VAR end = ()
     //物品数量大于0，使用并且跳转到继续使用
     //如果物品使用到最后一个，跳转到列表
     {
-    -get_item_num(id) > 1 :
+    -get_item_num(id) > 1 or get_item_status(id)?loop_item:
         ~use_item(id)
         ->use_loop
     -get_item_num(id) == 1 :
