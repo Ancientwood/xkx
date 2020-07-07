@@ -1,7 +1,8 @@
 == chapter_2
+#IMAGE:images/chapter_2.png
 ->valley
 
-/*0*/
+
 =valley
 #AUDIO:audio/scene_dizi.mp3
 · 未明谷
@@ -22,11 +23,6 @@
 
     -(action)
 
-    + [往前走 · 去小溪]
-    ->river
-    
-    + [往东走 · 青石桥]
-    ->east
     
     + [往西走 · 乱石阵]
     ->west
@@ -34,13 +30,19 @@
     + [往南走 · 去树林]
     ->south
     
+    + [往前走 · 去小溪]
+    ->river
+    
+    + [往东走 · 青石桥]
+    ->east
+
     + [往北走 · 去山坡]
     ->path
     
     + [查看【包裹】]
         ->list_item(->action)
 
-/*1*/
+
 =river
 #AUDIO:audio/bird_1.mp3
 · 小溪
@@ -80,7 +82,7 @@
     + [回到 · 未明谷]#STOP
         ->valley
 
-/*2*/
+
 =east
 · 青石桥头 
     这是一座断了的石桥。桥下流水缓缓流过，似乎有呜咽之声。
@@ -90,7 +92,7 @@
     
     - (action)
     {role_status?thirst:
-        你感到有些渴，不妨去桥下瞧瞧有没有干净的水源。
+        {not jq_qsqt:你感到有些渴，不妨去桥下瞧瞧有没有干净的水源。}
 
         + [下去【寻找】]
          {
@@ -151,14 +153,14 @@
 {role_status?thirst:{你聚精会神看向石头上的文字，只觉它似乎有魔法一般吸引注了你的精神，待你回过神来，明明只是一瞬间却好像过了许久。只觉得自己大汗淋漓仿佛脱水，脑海里却是一片空白，什么也没记住。|你感觉身体十分虚弱，这些文字反复蕴含着大恐怖，不是现在的自己能观看的，还是先去补充些水分吧。|你的头脑开始嗡嗡叫，眼冒金星，仿佛快要晕倒。|你感觉身体十分虚弱，已经无法再直视这些文字了。|。。。}}
 
 {
--role_status!?thirst and role_status?hungry and not wx_ty:
+-role_status!?thirst and role_status?hungry and role_wx!?wx_tycp:
     你聚精会神看向石头上的文字，只觉它似乎有魔法一般吸引注了你的精神，待你回过神来，明明只是一瞬间却好像过了许久。只觉得饥肠辘辘，脑海里却是一片空白，什么也没记住。
     还是吃些东西补充补充体力再继续吧。
     ->west.action
 }
 
 {
--role_status!?thirst and role_status!?hungry and not wx_ty:
+-role_status!?thirst and role_status!?hungry and role_wx!?wx_tycp:
     你聚精会神看向石头上的文字，只觉它似乎有魔法一般吸引注了你的精神，待你回过神来，明明只是一瞬间却好像过了许久。
     脑海里是一片空白，什么也没记住。
     还好你先前吃野果吃饱了，现下休息一会再试试吧。
@@ -174,7 +176,7 @@
 这些文字看着有些玄妙十分耗费精神，还是先备些吃的或者吃饱了再来吧，有备无患。
 }
 
-{wx_ty:
+{role_wx?wx_tycp:
     {斯人已逝，你不禁感慨。|。。。}
 }
 
@@ -199,12 +201,18 @@
                 }
                 
                 这股暖流自行在你体内游走起来。
-            ++++ (wx_ty)你领悟了「太乙」。#CLASS:bold
+            ++++ 你领悟了武学「太乙 · 残篇」。#CLASS:bold
+                ~role_wx+=wx_tycp
                 ->west.action
 -else:
     似乎是一门叫做【太乙】的武学，似乎奇妙非凡。
     可惜上面文字模糊不清，你却无法领悟，似乎缺了什么关隘。
-    当你走靠石碑时 · 青石桥 那边似乎有什么在闪烁，不妨过去看看。
+    折腾了这许久，你只觉得又渴又饿。
+    而当你走靠石碑时 · 青石桥 那边似乎有什么在闪烁，不妨过去看看。
+
+    {set_role_status(thirst)}
+    {set_role_status(hungry)}
+    
     + [回到 · 未明谷]#STOP
         ->valley
 }
@@ -254,7 +262,7 @@
 -role_status?hungry:
     {~这段山路看着有些陡峭难爬，还是填饱肚子再来吧。|山路险峻，还是休整一下再来吧。|这段山路看着有些难爬，还是去树林找些果子填饱肚子再来吧。}
     +[。。。]
-    你饿着肚子又出了一身汗，变得又饿又渴了。#CLASS:bold
+    你饿着肚子又出了一身汗，不禁觉得又饿又渴了。#CLASS:bold
     {set_role_status(thirst)}
     
         ++ [返回]->path.action
@@ -265,32 +273,41 @@
     +[。。。]
         
     你的水分补充得不足，不得已只能停下攀爬的脚步，又白白浪费了体力。
-    你现在又饿又渴了。#CLASS:bold
+    你现在觉得又饿又渴。#CLASS:bold
     {set_role_status(hungry)}
     
         ++ [返回]->path.action
     
--role_status!?hungry and not wx_ty:
+-role_status!?hungry and role_wx!?wx_tycp:
     你用尽全力往上爬去，全身大汗淋漓。
     你心里想，万幸是吃饱喝足了过来。
     否则爬到一半没力了岂不是一命呜呼？
+    爬坡消耗了你大量的体力。
     
-    +[。。。]
+    {set_role_status(hungry)}
+    {set_role_status(thirst)}
+    
+    + [继续攀爬]
+        ++[。。。]
         休息一下
-    ++[。。。]
-        喘几口气
-    +++[。。。]
-        发觉眼前竟又是一片开阔之处！
-    ->top
+        +++[。。。]
+            喘几口气
+        ++++[。。。]
+            发觉眼前竟又是一片开阔之处！
+            ->top
+            
+    + [返回]->path.action
     
- -wx_ty:
+ -role_wx?wx_tycp:
     
     + 你用尽全力向上攀爬。
-
-    山路崎岖，你提气轻身，太乙心法在你体内游走一圈。
-    ++ [【飞纵而上】]
-    你飞纵而上，发觉眼前竟又是一片开阔之处！
-        ->top
+    山路崎岖，似乎有一道暖流在你体内游走了一圈，你提气轻身，竟不禁忍不住想要长啸。
+    
+        ++ [【飞纵而上】]
+        你飞纵而上，发觉眼前竟又是一片开阔之处！
+            ->top
+            
+    + [返回]->path.action
 
 }
 
