@@ -3,7 +3,7 @@
 == function print_money(x) 
 {
     - x >= 1000:
-        {print_num(x / 1000)}两银子 { x mod 1000 > 0:{print_num(x mod 1000)}}文铜钱
+        {print_num(x / 1000)}两银子 { x mod 1000 > 0:{print_num(x mod 1000)}}{ x mod 1000 != 0:文铜钱}
     - x >= 100:
         {print_num(x / 100)}佰{ x mod 100 > 0:{print_num(x mod 100)}}文铜钱
     - x == 0:
