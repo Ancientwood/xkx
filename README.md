@@ -4,7 +4,7 @@
 
 由 [Inky](https://github.com/inkle/inky) 编写。
 
-插图由灵魂画手319倾心绘制。
+插图由 **灵魂画手319** 倾心绘制。
 
 ## TODO
 
@@ -14,8 +14,8 @@
 - [x] 音效
 - [x] 自定义样式
 - [x] 地图系统
-- [x] 装备系统
-- [ ] 人物状态
+- [x] 物品系统
+- [x] 人物状态
 - [ ] 战斗系统
 
 ## 基本语法
@@ -61,7 +61,7 @@ VAR 全局变量
 
 temp 临时变量
 
-~ 数值运算
+~ 进行运算
 
 function 函数
 ```
@@ -153,87 +153,67 @@ VAR murmurersVolume = quiet
 
 ```
 //列表自定义值
-LIST primeNumbers = two = 2, three = 3, five = 5
+LIST num = two = 2, three = 3, five = 5
 
-LIST DoctorsInSurgery = (Adams=8), Bernard=10, (Cartwright), (Denver), (Eamonn)
+LIST people = (Adams=8), Bernard=10, (Cartwright), (Denver), (Eamonn)
 //打印选中的值
-{DoctorsInSurgery}
+{people}
 
 //进行清空
-~ DoctorsInSurgery = ()
-{DoctorsInSurgery}
+~ people = ()
 
 //增加选中
-~ DoctorsInSurgery += (Adams, Bernard, Cartwright, Denver)
-{DoctorsInSurgery}
+~ people += (Adams, Bernard, Cartwright, Denver)
 
 //删除选中
-~ DoctorsInSurgery += (Bernard)
-{DoctorsInSurgery}
+~ people -= (Bernard)
+{people}
 
 //函数测试
-{LIST_COUNT(DoctorsInSurgery)} //输出选中的值
-{LIST_MIN(DoctorsInSurgery)} 	 //输出序号最小的值
-{LIST_MAX(DoctorsInSurgery)} 	 //输出序号最大的值
-{LIST_RANDOM(DoctorsInSurgery)}//随机输出一个值
-{LIST_ALL(element of list)}		 //输出完整的列表（未被选中也会输出）
+{LIST_COUNT(people)} //输出选中的数量
+{LIST_MIN(people)} 	 //输出选中里面的最小值
+{LIST_MAX(people)} 	 //输出选中里面的最大值
+{LIST_RANDOM(people)}//随机输出选中的一个值
+{LIST_ALL(element of list)} //输出完整的列表（未被选中也会输出）
 {LIST_RANGE(list_name, min_value, max_value)} //函数切片
-{LIST_INVERT(list_name)}			 //函数倒置
+{LIST_INVERT(list_name)} //函数倒置
 
 //测试选中列表是否为空
-{ DoctorsInSurgery: The surgery is open today. | Everyone has gone home. }
+{ people: not empty }
 
 //测试选中列表是否相等
-{ DoctorsInSurgery == (Adams, Bernard):
-	Dr Adams and Dr Bernard are having a loud argument in one corner.
+{ people == (Adams, Bernard):
+    only Adams, Bernard
 }
 
 //测试是否在选中列表中
 //包含操作： ? 或者 has
 //不包含操作： !? 或者 hasnt
-{ DoctorsInSurgery ? (Adams, Bernard):
-	Dr Adams and Dr Bernard are having a hushed argument in one corner.
+{ people ? (Adams, Bernard):
+    has Adams, Bernard
 }
 //相交列表
-{desiredValues ^ actualValues: The new president has at least one desirable quality.} 
+{desiredValues ^ actualValues: 
+    ...
+} 
 ```
-
-##### 跟踪对象列表
-
-```
-LIST Characters = Alfred, Batman, Robin 
-LIST Props = champagne_glass, newspaper 
-
-VAR BallroomContents = (Alfred, Batman, newspaper) 
-VAR HallwayContents = (Robin, champagne_glass) 
-```
-
-##### 跟踪多个状态的列表
-
-```
-LIST OnOff = on, off 
-LIST HotCold = cold, warm, hot 
-
-VAR kettleState = off, cold 
-```
-
 ## 多媒体支持
 
 ```
 # theme: dark 暗色主题
 # author: 作者
 # CLEAR 清空屏幕
-# IMAGE: myImages/imageName.jpg 插入图片
+# IMAGE: images/imageName.jpg 插入图片
 # CLASS: 自定义CSS类
 # RESTART 重新开始
-# AUDIO: myBgms/bgm.mp3 背景音乐
-# LOOP: myBgms/bgm.mp3 背景音乐循环
+# AUDIO: audio/bgm.mp3 背景音乐
+# LOOP: audio/bgm.mp3 背景音乐循环
 # STOP 停止播放
 ```
 
 ## 自定义CSS
 
-多个 `class` 写多个用分号分隔,例如: `#CLASS:bold,red`。
+多个 `class` 写多个用逗号分隔,例如: `#CLASS:bold,red`。
 
 目前不支持给选项 `choice` 添加新的 `class`。
 
