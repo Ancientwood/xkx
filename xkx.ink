@@ -1,4 +1,3 @@
-INCLUDE global/role.ink
 INCLUDE chapter/1.ink
 INCLUDE chapter/2.ink
 INCLUDE chapter/3.ink
@@ -10,6 +9,10 @@ INCLUDE item/num.ink
 INCLUDE item/callback.ink
 INCLUDE item/status.ink
 INCLUDE global/number.ink
+INCLUDE role/status.ink
+INCLUDE role/wx.ink
+
+
 
 
 

@@ -1,6 +1,7 @@
 == chapter_3
+#IMAGE:images/chapter_3.gif
+#AUDIO:audio/jiuguan_1.mp3
 ->jzxd
-
 =jzxd
 · 集镇小道
     这里是个并不繁荣，却显得极为安详的小镇，每一个人脸上都挂着没有忧愁的笑容。
