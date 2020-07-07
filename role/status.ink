@@ -7,7 +7,7 @@ full,
 injured,
 poisoning,
 dying,
-healthy,
+(healthy),
 (thirst),
 nothirst
 

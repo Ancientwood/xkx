@@ -1,7 +1,6 @@
 == chapter_3
-#IMAGE:images/chapter_3.gif
-#AUDIO:audio/jiuguan_1.mp3
 ->jzxd
+
 =jzxd
 · 集镇小道
     这里是个并不繁荣，却显得极为安详的小镇，每一个人脸上都挂着没有忧愁的笑容。
@@ -13,6 +12,7 @@
     + [往西走 · 杏子林]->xzl
     + [往南走 · 回坡上] ->chapter_2.top
     + [往北走 · 集镇小道北]->jzxdb
+    + [往东走 · 赌坊]->cj_df
     + [往东北走 · 药铺] ->cj_yp
     + [往东南走 · 酒铺] ->jp
     + [查看【包裹】]
@@ -45,6 +45,86 @@
         ->list_item(->action)
     +[回 · 杏子林] -> xzl//杏子林
 
+/*
+*   场景: 赌坊
+*/
+=cj_df
+· 赌坊
+    赌坊里传来阵阵吆喝声，两三张桌子面前挤满了看热闹的人
+    有人欢喜有人忧，一夜暴富有，一无所有的也有
+    也有些人憋着一口气总想赌个回本，殊不知越陷越深
+    赌坊老板盯着你，想着是不是下一个“金元宝”要进场了
+    {get_item_num(wp_qian) == 0:
+        你现在身无分文，还是先去别处逛逛吧。
+        +[回到·集镇小道]
+        ->jzxd
+    -else:
+        ->dh_df
+    }
+    
+    
+=dh_df
+    -(action)
+    +[玩比大小]
+        ->gn_df
+    +[玩猜拳]
+        今日不开放，小兄弟下次再来吧
+        ->dh_df
+    +[查看包裹]
+    ->list_item(->action)
+    +[回到·集镇小道]
+    ->jzxd
+
+=gn_df
+赌坊的伙计微笑的向你介绍到：
+规则很简单，由庄家掷两枚骰子，你可以压大或者压小
+一到六点是小，七到十二点是大
+压对了庄家赔你的本钱
+这位小兄弟要不要试试手气，搏一搏
+    -(loop)
+    +[试试手气]
+        ~temp isYaDa = true
+        ~temp df_money = 0
+        --(ya_daxiao)
+        ++压大
+            ~isYaDa = true
+        ++压小
+            ~isYaDa = false
+        ++[返回]
+        ->loop
+        --(ya_money)
+            +++[{print_money(100)}] 你压了{print_money(100)}
+            ~df_money=100
+            +++[{print_money(500)}]你压了{print_money(500)}
+            ~df_money=500
+            +++[{print_money(1000)}]你压了{print_money(1000)}
+            ~df_money=1000
+            +++[{print_money(5000)}]你压了{print_money(5000)}
+            ~df_money=5000
+            +++[全压]你梭哈了！
+            ~df_money=get_item_num(wp_qian)
+            +++[返回]
+            ->ya_daxiao
+            ---
+            {
+                -get_item_num(wp_qian)<df_money:
+                    你没有那么多钱可以压
+                    ->ya_money
+            }
+            +++[开始掷骰子]
+            ~temp point = RANDOM(1, 12)
+            骰子的点数为 {point}
+            {
+            -(point<=6 and isYaDa) or (point>6 and !isYaDa):
+                ~set_item_num(wp_qian, get_item_num(wp_qian) - df_money)
+                你输了，失去了{print_money(df_money)}
+             -(point<=6 and !isYaDa) or (point>6 and isYaDa):
+                ~set_item_num(wp_qian, get_item_num(wp_qian) + df_money)
+                你赢了！得到了{print_money(df_money)}
+            }
+       ->loop
+    +[返回]
+    ->dh_df
 =jp
 · 酒铺
     这家酒铺的老板是一名老汉。
@@ -161,24 +241,31 @@
    西边叮叮当当的打铁声在宣告这个集镇并不是一味的慵懒，依然在为这个世外桃源输送兵铁。
    东边杂货铺的货物林林总总，五脏俱全，都堆到这边的路上了。
    
-    + [往西走 · 铁匠铺] ->tjp
+    + [往西走 · 铁匠铺] ->cj_tjp
     + [往南走 · 集镇小道] ->jzxd
     + [往北走 · 山庄大门 ] ->cj_szdm
     + [往东走 · 杂货铺] ->zhp
 
-=tjp
+/**
+*   场景：铁匠铺
+*/
+=cj_tjp
 · 铁匠铺
     这是一家简陋的打铁铺，中心摆着一个火炉，炉火把四周照得一片通红，你一走进去就感到浑身火热。
 	墙角堆满了已完工和未完工的菜刀、铁锤、铁棍、匕首、盔甲等物。
 	一位铁匠满头大汗挥舞着铁锤，专心致志地在打铁。
-    这里唯一的出口是东边。
-    铁匠 老胡
 	老胡说道：「欢迎这位小兄弟光临，请随便参观。」
-	
-	 +[你现在身无分文，还是先去别处逛逛吧。]
-	 -
-	 +[回 · 集镇小道北]->jzxdb
-  
+	->dh_tjp
+=dh_tjp
++{get_item_num(wp_qian)<100}[打工赚钱]
+    ->gn_dgzq
++[回 · 集镇小道北]->jzxdb
+
+=gn_dgzq
+你进入了铁匠铺帮忙
+忙活了一整天获得了 {print_money(100)}
+~set_item_num(wp_qian, get_item_num(wp_qian) + 100)
+->dh_tjp
 /*
 你可以向老胡购买下列物品：
 铁锤(Hammer)                  ：一两白银又五十文铜板
@@ -675,7 +762,7 @@
 +[...]
 -你渐渐睁开了眼睛,发现自己躺在西厢房的床上
 感到全身无力，记不起发生了什么
-你揉了揉脑袋，感觉自己好了一些
+你揉了揉脑袋，感觉自己好了一些  
 +[你慢慢支撑着自己起了床]
 ->chapter_3.cj_xxf
 # CLASS: end
