@@ -192,8 +192,7 @@
        
             +++使用【{get_item_name(wp_yupei)}】
                 //使用物品后的回调
-                {get_item_use_callback(wp_yupei)}
-        
+                ->get_item_use_callback(wp_yupei)->
                 //物品数量大于0，使用
                 {get_item_num(wp_yupei) > 0 :
                     ~use_item(wp_yeguo)

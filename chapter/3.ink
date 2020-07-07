@@ -12,7 +12,7 @@
     + [往西走 · 杏子林]->xzl
     + [往南走 · 回坡上] ->chapter_2.top
     + [往北走 · 集镇小道北]->jzxdb
-    + [往东北走 · 药铺] ->yp
+    + [往东北走 · 药铺] ->cj_yp
     + [往东南走 · 酒铺] ->jp
     + [查看【包裹】]
         ->list_item(->action)
@@ -94,15 +94,63 @@
 =jp_out
 -老汉挥挥手“下次再来，少侠”
 + [回 · 集镇小道]-> jzxd
-=yp
+
+/**
+*   场景：药铺
+*/
+=cj_yp
 · 药铺
     隔着街便又一阵阵清香传来，你的精神也不禁一振。
     药铺的门内坐着一位胡须花白的老者，正低头摆弄着草药。
-
-    +[你现在身无分文，还是先去别处逛逛吧。]
-    -
+    {get_item_num(wp_qian) == 0:
+        你现在身无分文，还是先去别处逛逛吧。
+        ->dh_yp
+    }
+    ->dh_yp
+=dh_yp
+    -(action)
+    + {get_item_num(wp_qian) > 0}[买药]
+    ->gn_maiyao
+    +[查看包裹]
+    ->list_item(->action)
     +[回 · 集镇小道]
     ->jzxd
+
+=gn_maiyao
+    ~temp target_money  = 0
+    ~temp target_name   = ""
+    ~temp target_item   = ()
+    +[【伤药】({print_money(100)})]
+        ~target_money=100
+        ~target_name="伤药"
+        ~target_item=wp_shangyao
+    +[【金创药】({print_money(200)})]
+        ~target_money=200
+        ~target_name="金创药"
+        ~target_item=wp_jinchuangyao
+    +[【砒霜】({print_money(500)})]
+        ~target_money=500
+        ~target_name="砒霜"
+        ~target_item=wp_pishuang
+    +[【解毒药】({print_money(600)})]
+        ~target_money=150
+        ~target_name="解毒药"
+        ~target_item=wp_jieduyao
+    +[返回]
+        ->dh_yp
+    -
+    {get_item_num(wp_qian) >= target_money and target_money!=0:
+        ~temp calcu_money = get_item_num(wp_qian) - target_money
+        ~set_item_num(wp_qian, calcu_money)
+        你花了{print_money(target_money)}买了一包{target_name}
+        ~add_item(target_item)
+        ->gn_maiyao
+        -else:
+        你没有足够的钱
+        ->gn_maiyao
+    }
+    
+    
 
 =jzxdb
 · 集镇小道北
@@ -243,11 +291,31 @@
 */
 =cj_ph
 · 票号
-    你来到了票号
+    这是柳秀山庄下的一处资产，票号虽是老字号，但规模并不大，发行的银票也只能是柳秀山庄内通行。
+    这会儿钱庄老板在盯着伙计查账。
+    在对面的墙上挂了块牌子。
+    如果你不懂这里的规矩，你可以看看牌子。
     ->dh_ph
 =dh_ph
+    -(action)
+    {items?wp_lxph_piaoju:
+        *[兑换银票]
+        你获得了 10 两
+        ~del_item(wp_lxph_piaoju)
+        ~temp temp_money = get_item_num(wp_qian) + 10000
+        ~set_item_num(wp_qian, temp_money)
+        取了钱，赶紧去药铺买药疗伤吧。#CLASS:bold
+        ->action
+    }
+    +[查看牌子]
+    规矩一：一次存钱需10两以上
+    规矩二：钱票两清，离店自负
+    {print_money(100)}
+    ->dh_ph
     +[返回山庄大门]
     ->cj_szdm
+    +[查看包裹]
+    ->list_item(->action)
 
 /**
 *   场景：长廊
@@ -388,17 +456,17 @@
                 你向游鲲翼打听有关“闯荡江湖”的消息
                 游鲲翼说道: “小兄弟，闯荡江湖得需一技傍身，我看你也有些功夫在身，敝庄尚武堂有几名武师，懂点三脚猫功夫，要不去跟他们切磋一下试试。”
                 你跃跃欲试，已经迫不及待了！
-                <>快去尚武堂找武师试试身手吧。#CLASS:red,bold
+                <>快去尚武堂找武师试试身手吧。#CLASS:bold
                 -> role_talk
             ***{jq_after_shoushang}[再次打听【闯荡江湖】的消息]
                 你向游鲲翼打听有关『闯荡江湖』的消息。
                 游鲲翼说道：“这位小兄弟切莫心急，庄里的武师甚是野蛮，得罪了阁下，把伤养好再说吧。”
                 “我在柳秀票号为小兄弟存了些银两，我这里有事脱不开身，麻烦小兄弟自行取了，
-                <>再去药铺买些药服下吧。#CLASS:red,bold
+                <>再去药铺买些药服下吧。#CLASS:bold
                 <>”
                 你获得了 柳秀票号的票据
                 ~add_item(wp_lxph_piaoju)
-                快去柳秀票号看看游鲲翼给你存了多少钱，都取出来吧。#CLASS:red,bold
+                快去柳秀票号看看游鲲翼给你存了多少钱，都取出来吧。#CLASS:bold
                 ->role_talk
             +++[返回]
                 ->role_talk
@@ -475,7 +543,7 @@
         *[多谢壮士]
         你获得一包伤药
         天色已晚，这场比试消耗了你不少的体力，你觉得十分劳累，<>
-        回厢房去休息一下吧。 #CLASS:red,bold
+        回厢房去休息一下吧。 #CLASS:bold
         ->dh_swt
 //地图导航
 =dh_swt
@@ -516,7 +584,7 @@
 //被武师打伤后休息完，准备再去找庄主的剧情提示
 =jq_after_shoushang
     你气色恢复，虽然被武师打败了，仍有闯荡江湖，行侠仗义的雄心。
-    去正厅找庄主，再问问他有关“闯荡江湖”的事.#CLASS:red,bold
+    去正厅找庄主，再问问他有关“闯荡江湖”的事.#CLASS:bold
     ->dh_xxf
 //地图导航
 =dh_xxf
@@ -574,7 +642,7 @@
 //洗完澡后剧情
 =jq_after_xizhao
     终于把澡洗完了，<>
-    再去问问庄主关于闯荡江湖的事情吧。 #CLASS:red,bold 
+    再去问问庄主关于闯荡江湖的事情吧。 #CLASS:bold 
     ->dh_nys
     
 //地图导航
@@ -598,6 +666,17 @@
 }
     +[离开]
     ->cj_nys
+
+=gn_restart
+-
++[...]
+-
++[...]
+-你渐渐睁开了眼睛,发现自己躺在西厢房的床上
+感到全身无力，记不起发生了什么
+你揉了揉脑袋，感觉自己好了一些
++[你慢慢支撑着自己起了床]
+->chapter_3.cj_xxf
 # CLASS: end
 TOBE CONTINUED...
 -> END

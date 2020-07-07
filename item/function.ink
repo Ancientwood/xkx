@@ -39,7 +39,10 @@ VAR end = ()
 
     //物品总数量大于0，显示每个物品的选项
     //如果物品是消耗，显示对应数量
-    +{items?id and LIST_COUNT(items) > 0}查看【{get_item_name(id)}】{get_item_status(id)?consumables: * 【{print_num(get_item_num(id))}】}
+    {id==wp_qian:
+        你拥有 {print_money(get_item_num(wp_qian))} #CLASS:bold
+    }
+    +{items?id and get_item_status(id)!?money and LIST_COUNT(items) > 0}查看【{get_item_name(id)}】{get_item_status(id)?consumables: * 【{print_num(get_item_num(id))}】}
     
     //物品详情
     {get_item_intro(id)}
@@ -49,8 +52,8 @@ VAR end = ()
     ++ 使用【{get_item_name(id)}】
     
     //使用物品后的回调
-    {get_item_use_callback(id)}
-
+    // {get_item_use_callback(id)}
+    ->get_item_use_callback(id)->
     //物品数量大于0，使用并且跳转到继续使用
     //如果物品使用到最后一个，跳转到列表
     {
