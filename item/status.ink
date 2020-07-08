@@ -10,8 +10,8 @@ money,                  //货币
 loop_item,
 hulu_full
 
-== function get_item_status(id)
-{id:
+== function get_item_status(key)
+{key:
 -wp_qian:~return (consumables, money)
 -wp_yupei:~return (durable)
 -wp_hulu:~return (loop_item)
@@ -23,8 +23,8 @@ hulu_full
 -wp_pishuang:~return (consumables)
 }
 
-== function set_hulu_status(id)
-{id:
+== function set_hulu_status(key)
+{key:
 -0:~item_status-=hulu_full
 -1:~item_status+=hulu_full
 }

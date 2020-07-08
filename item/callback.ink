@@ -1,7 +1,7 @@
-/* 通过物品id获取物品使用后的回调信息
+/* 通过物品key获取物品使用后的回调信息
 */
-==get_item_use_callback(id)
-{id:
+==get_item_use_callback(key)
+{key:
 -wp_yupei:你将玉佩贴紧眉心，突然一股暖流从玉佩中涌入身体，你感觉自己的精神不禁为之一振。
 
 -wp_hulu:

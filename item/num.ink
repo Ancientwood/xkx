@@ -1,5 +1,5 @@
 /* 
-*   通过物品id获取数量
+*   通过物品key获取数量
 */
 VAR num_qian = 0
 VAR num_yupei = 0
@@ -12,8 +12,8 @@ VAR num_jieduyao = 0
 VAR num_pishuang = 0
 
 
-== function get_item_num(id)
-{id:
+== function get_item_num(key)
+{key:
 -wp_qian:~return num_qian
 -wp_yupei:~return num_yupei
 -wp_hulu:~return num_hulu
@@ -25,8 +25,8 @@ VAR num_pishuang = 0
 -wp_pishuang:~return num_pishuang
 }
 
-== function add_item_num(id)
-{id:
+== function add_item_num(key)
+{key:
 -wp_qian:~ num_qian++
 -wp_yupei:~ num_yupei++
 -wp_hulu:~ num_hulu++
@@ -38,8 +38,8 @@ VAR num_pishuang = 0
 -wp_pishuang:~ num_pishuang++
 }
 
-== function del_item_num(id)
-{id:
+== function del_item_num(key)
+{key:
 -wp_qian:~ num_qian--
 -wp_yupei:~ num_yupei--
 -wp_hulu:~ num_hulu--
@@ -51,8 +51,8 @@ VAR num_pishuang = 0
 -wp_pishuang:~ num_pishuang--
 }
 
-== function set_item_num(id, num)
-~items+=id
-{id:
+== function set_item_num(key, num)
+~items+=key
+{key:
 -wp_qian:~ num_qian=num
 }
