@@ -1,4 +1,7 @@
 == chapter_3
+#IMAGE:images/chapter_3.gif
+#AUDIO:audio/jiuguan_1.mp3
+
 ->jzxd
 
 =jzxd

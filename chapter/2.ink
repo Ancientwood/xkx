@@ -2,7 +2,6 @@
 #IMAGE:images/chapter_2.png
 ->valley
 
-
 =valley
 #AUDIO:audio/scene_dizi.mp3
 · 未明谷
