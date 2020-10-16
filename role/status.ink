@@ -65,7 +65,6 @@ VAR role_end = ()
 ~end = LIST_MAX(role_status)
 
 -(loop)
-
 {role_status?head:{get_role_status(role_head)}} <> 
 
 {

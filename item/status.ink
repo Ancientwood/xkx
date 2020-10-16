@@ -7,6 +7,7 @@ LIST item_status =
 consumables,            //消耗品
 durable,                //持久品
 money,                  //货币
+sword,                   //武器
 loop_item,
 hulu_full
 
@@ -21,6 +22,19 @@ hulu_full
 -wp_jinchuangyao:~return (consumables)
 -wp_jieduyao:~return (consumables)
 -wp_pishuang:~return (consumables)
+//杂货
+-wp_shihe:~return (consumables)
+-wp_zhuli:~return (consumables)
+-wp_jitui:~return (consumables)
+//酒
+-wp_shaodaozi:~return (consumables)
+-wp_zhuyeqing:~return (consumables)
+-wp_dukangjiu:~return (consumables)
+-wp_nverhong:~return (consumables)
+//武器
+-wp_tiechui:~return (consumables)
+-wp_qgcj:~return (consumables)
+-wp_longqj:~return (consumables)
 }
 
 == function set_hulu_status(key)

@@ -42,7 +42,14 @@ VAR end = ()
     {id==wp_qian:
         你拥有 {print_money(get_item_num(wp_qian))} #CLASS:bold
     }
+    
+    //TODO 增加武器已装备状态，需要配合role模块
+    //{get_item_status(id) == sword:
+    //    装备【{get_item_name(id)}】 * 【{print_num(get_item_num(id))}】(已装备)
+    //}
     +{items?id and get_item_status(id)!?money and LIST_COUNT(items) > 0}查看【{get_item_name(id)}】{get_item_status(id)?consumables: * 【{print_num(get_item_num(id))}】}
+    
+
     
     //物品详情
     {get_item_intro(id)}
@@ -81,6 +88,7 @@ VAR end = ()
     {get_item_status(id)?consumables:
         ~del_item_num(id)
     }
+    //TODO 判断是武器可装备
 
 == function del_item(id)
     {get_item_num(id) == 1:
