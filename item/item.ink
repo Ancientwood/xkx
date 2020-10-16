@@ -10,7 +10,14 @@ wp_lxph_piaoju,
 wp_shangyao,
 wp_jinchuangyao,
 wp_jieduyao,
-wp_pishuang
+wp_pishuang,
+wp_shihe,
+wp_zhuli,
+wp_shaodaozi,
+wp_zhuyeqing,
+wp_dukangjiu,
+wp_nverhong,
+wp_jitui
 
 /* 
 *   通过物品key获取名称

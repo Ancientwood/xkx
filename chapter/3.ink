@@ -68,12 +68,12 @@
     
 =dh_df
     -(action)
-    +[玩比大小]
+    +[玩【比大小】]
         ->gn_df
-    +[玩猜拳]
+    +[玩【猜拳】]
         今日不开放，小兄弟下次再来吧
         ->dh_df
-    +[查看包裹]
+    +[查看【包裹】]
     ->list_item(->action)
     +[回到·集镇小道]
     ->jzxd
@@ -104,7 +104,16 @@
             ~df_money=1000
             +++[{print_money(5000)}]你压了{print_money(5000)}
             ~df_money=5000
-            +++[全压]你梭哈了！
+            +++[全压]
+            {get_item_num(wp_qian)==0:
+                {~你身上一文钱也没有。|你现在穷得叮当响。|去去去，穷鬼还来赌。|怎么又是你这个衰星。}
+                你被赌坊打手赶了出去。
+                ->jzxd
+            -else:
+                你压上了全部家当！
+            }
+            
+            
             ~df_money=get_item_num(wp_qian)
             +++[返回]
             ->ya_daxiao
@@ -151,33 +160,43 @@
     - 卖酒老汉用脖子上的毛巾抹了抹手，说道：这位小兄弟，
     请进请进，我们这儿的可都是好酒啊。
     - {&哦那我倒要瞧一瞧了|有哪些好酒？}
-    你可以向老汉购买下列物品：->jp_list
-=jp_list
-+ (sdz)[烧刀子(九十文钱)]
-+ (zyq)[竹叶青(两百文钱)]
-+ (dkj)[杜康酒(两百三十文钱)]
-+ (neh)[女儿红(三百文钱)]
-+ [算了，还是下次再来吧] ->jp_out
+    你可以向老汉购买下列物品：->jp_jy
+=jp_jy
+    + [【烧刀子】({print_money(90)})]
+    ~buy_item(90,"烧刀子",wp_shaodaozi)
+    ->jp_jy
 
-//还没有钱
--	 
-+[你现在身无分文，还是先去别处逛逛吧。]
--
-+[回 · 集镇小道]->jzxd
+    + [【竹叶青】({print_money(200)})]
+    ~buy_item(200,"竹叶青",wp_zhuyeqing)
+    ->jp_jy
+    
+    + [【杜康酒】({print_money(230)})]
+    ~buy_item(230,"杜康酒",wp_dukangjiu)
+    ->jp_jy
+    
+    + [【女儿红】({print_money(300)})]
+    ~buy_item(300,"女儿红",wp_nverhong)
+    老汉{&微笑|热情}的继续问道，少侠还需要点什么吗？
+        ++ [不需要了]老汉挥挥手“下次再来，少侠” 
+        ->jzxd
+        ++ [买点其它的] -> jp_jy
+        ** [这儿还有鸡腿卖吗？] ->jitui_event
+    ->jp_jy
+    
 
--你买了下了{sdz:烧刀子}{zyq:竹叶青}{dkj:杜康酒}{neh:女儿红}
-老汉{&微笑|热情}的继续问道，少侠还需要点什么吗？
-+ [不需要] ->jp_out
-+ [买点其它的] -> jp_list
-* [这儿还有鸡腿卖吗？] ->jitui_event
++ [返回] 
+->jp
+
 =jitui_event
 一般人老汉我不卖他，看你出手阔绰，今个儿就送你一个鸡腿
++[感谢老汉]
 "多谢"，你拱了拱手说道
 你从老汉那里获得了一个烤鸡腿。
-->jp_out
-=jp_out
--老汉挥挥手“下次再来，少侠”
-+ [回 · 集镇小道]-> jzxd
+~add_item(wp_jitui)
+++ [买点其他的] 
+-> jp_jy
+++ [回 · 集镇小道]
+->jzxd
 
 /**
 *   场景：药铺
@@ -186,55 +205,36 @@
 · 药铺
     隔着街便又一阵阵清香传来，你的精神也不禁一振。
     药铺的门内坐着一位胡须花白的老者，正低头摆弄着草药。
-    {get_item_num(wp_qian) == 0:
-        你现在身无分文，还是先去别处逛逛吧。
-        ->dh_yp
-    }
-    ->dh_yp
-=dh_yp
+
     -(action)
-    + {get_item_num(wp_qian) > 0}[买药]
-    ->gn_maiyao
-    +[查看包裹]
+    + [【买药】]
+    ->yp_jy
+    +[查看【包裹】]
     ->list_item(->action)
     +[回 · 集镇小道]
     ->jzxd
 
-=gn_maiyao
-    ~temp target_money  = 0
-    ~temp target_name   = ""
-    ~temp target_item   = ()
-    +[【伤药】({print_money(100)})]
-        ~target_money=100
-        ~target_name="伤药"
-        ~target_item=wp_shangyao
+=yp_jy
+    + [【伤药】({print_money(100)})]
+    ~buy_item(100,"伤药",wp_shangyao)
+    ->yp_jy
+
+
     +[【金创药】({print_money(200)})]
-        ~target_money=200
-        ~target_name="金创药"
-        ~target_item=wp_jinchuangyao
+    ~buy_item(200,"金创药",wp_jinchuangyao)
+    ->yp_jy
+
     +[【砒霜】({print_money(500)})]
-        ~target_money=500
-        ~target_name="砒霜"
-        ~target_item=wp_pishuang
-    +[【解毒药】({print_money(600)})]
-        ~target_money=150
-        ~target_name="解毒药"
-        ~target_item=wp_jieduyao
+    ~buy_item(500,"砒霜",wp_pishuang)
+    ->yp_jy
+
+    +[【解毒药】({print_money(150)})]
+    ~buy_item(150,"解毒药",wp_jieduyao)
+    ->yp_jy
+
     +[返回]
-        ->dh_yp
-    -
-    {get_item_num(wp_qian) >= target_money and target_money!=0:
-        ~temp calcu_money = get_item_num(wp_qian) - target_money
-        ~set_item_num(wp_qian, calcu_money)
-        你花了{print_money(target_money)}买了一包{target_name}
-        ~add_item(target_item)
-        ->gn_maiyao
-        -else:
-        你没有足够的钱
-        ->gn_maiyao
-    }
-    
-    
+        ->cj_yp
+
 
 =jzxdb
 · 集镇小道北
@@ -283,21 +283,21 @@
 	杨掌柜懒洋洋地躺在一只躺椅上，招呼着过往行人。据说私底下他也卖一些贵重的东西。
 	摊上立着一块招牌。
 
+    +[【交易】]->zhp_jy
 
+	+[回 · 集镇小道北]->jzxdb
 
-	 +[你现在身无分文，还是先去别处逛逛吧。]
-	 -
-	 +[回 · 集镇小道北]->jzxdb
-/*
-    你可以看看招牌
-    这里唯一的出口是东边。
-    杂货铺老板 杨永福
+=zhp_jy
 你可以向杨永福购买下列物品：
-食盒(Shi he)                  ：五十文铜板
-竹笠(Zhu li)                  ：一两白银又五十文铜板
-
-你从杨永福那里买下了一个食盒。
-*/
++ [【食盒】({print_money(50)})]
+    ~buy_item(50,"食盒",wp_shihe)
+    ->zhp_jy
+    
++ [【竹笠】({print_money(1050)})]
+    ~buy_item(1050,"竹笠",wp_zhuli)
+    ->zhp_jy
++ 返回->zhp
+    
 =cj_szdm
 · 山庄大门 
     走进云雾，终见面目。
@@ -407,7 +407,7 @@
     ->dh_ph
     +[返回山庄大门]
     ->cj_szdm
-    +[查看包裹]
+    +[查看【包裹】]
     ->list_item(->action)
 
 /**
@@ -734,7 +734,7 @@
     ->cj_nys
     +[往东走 · 柳秀山庄正厅]
     ->cj_lxszzt
-    +[查看包裹]
+    +[查看【包裹】]
     ->list_item(->action)
     
 //功能

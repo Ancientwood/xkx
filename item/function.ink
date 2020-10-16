@@ -88,3 +88,14 @@ VAR end = ()
     }
      ~del_item_num(id)
 
+== function buy_item(target_money,target_name,target_item)
+    {get_item_num(wp_qian) >= target_money and target_money!=0:
+        ~temp calcu_money = get_item_num(wp_qian) - target_money
+        ~set_item_num(wp_qian, calcu_money)
+        你花了{print_money(target_money)}购买了{target_name}
+        ~add_item(target_item)
+
+        -else:
+        你没有足够的钱
+
+    }

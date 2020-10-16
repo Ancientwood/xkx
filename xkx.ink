@@ -16,6 +16,10 @@ INCLUDE role/wx.ink
 # author: Anc & Finz & 319
 #IMAGE:images/xkx_1.png
 
+/**
++ [测试]->chapter_3.cj_df
+*/
+
 + [第一回 · 梦幻泡影]->chapter_1 # CLEAR
 + [第二回 · 未明谷中]->chapter_2 # CLEAR
 + [第三回 · 柳秀山庄]->chapter_3 # CLEAR
