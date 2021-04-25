@@ -3,6 +3,10 @@
     // Create ink story from the content using inkjs
     var story = new inkjs.Story(storyContent);
 
+    var savePoint = "";
+
+    let savedTheme;
+    let globalTagTheme;
 
     // Global tags - those at the top of the ink file
     // We support:
@@ -16,7 +20,7 @@
             
             // THEME: dark
             if( splitTag && splitTag.property == "theme" ) {
-                document.body.classList.add(splitTag.val);
+                globalTagTheme = splitTag.val;
             }
             
             // author: Your Name
@@ -29,6 +33,14 @@
 
     var storyContainer = document.querySelector('#story');
     var outerScrollContainer = document.querySelector('.outerContainer');
+
+    // page features setup
+    setupTheme(globalTagTheme);
+    var hasSave = loadSavePoint();
+    setupButtons(hasSave);
+
+    // Set initial save point
+    savePoint = story.state.toJson();
 
     // Kick off the start of the story!
     continueStory(true);
@@ -59,6 +71,29 @@
                 // customised to be used for other things too.
                 var splitTag = splitPropertyTag(tag);
 
+                // AUDIO: src
+                if( splitTag && splitTag.property == "AUDIO" ) {
+                  if('audio' in this) {
+                    this.audio.pause();
+                    this.audio.removeAttribute('src');
+                    this.audio.load();
+                  }
+                  this.audio = new Audio(splitTag.val);
+                  this.audio.play();
+                }
+
+                // AUDIOLOOP: src
+                else if( splitTag && splitTag.property == "AUDIOLOOP" ) {
+                  if('audioLoop' in this) {
+                    this.audioLoop.pause();
+                    this.audioLoop.removeAttribute('src');
+                    this.audioLoop.load();
+                  }
+                  this.audioLoop = new Audio(splitTag.val);
+                  this.audioLoop.play();
+                  this.audioLoop.loop = true;
+                }
+
                 // IMAGE: src
                 if( splitTag && splitTag.property == "IMAGE" ) {
                     var imageElement = document.createElement('img');
@@ -67,6 +102,21 @@
 
                     showAfter(delay, imageElement);
                     delay += 200.0;
+                }
+
+				// LINK: url
+                else if( splitTag && splitTag.property == "LINK" ) {
+                    window.location.href = splitTag.val;
+                }
+
+                // LINKOPEN: url
+                else if( splitTag && splitTag.property == "LINKOPEN" ) {
+                    window.open(splitTag.val);
+                }
+
+                // BACKGROUND: src
+                else if( splitTag && splitTag.property == "BACKGROUND" ) {
+                    outerScrollContainer.style.backgroundImage = 'url('+splitTag.val+')';
                 }
 
                 //bgm or sfx
@@ -122,18 +172,9 @@
             storyContainer.appendChild(paragraphElement);
             
             // Add any custom classes derived from ink tags
-            for(var i=0; i<customClasses.length; i++){
-                var temp = customClasses[i].split(",");
-                if(temp.length >= 2){
-                   for(var j=0; j<temp.length; j++){
-                      paragraphElement.classList.add(temp[j]);
-                      console.log(temp[j]);
-                   }
-                } else {
-                  paragraphElement.classList.add(customClasses[i]);
-                }
-            }
-            
+            for(var i=0; i<customClasses.length; i++)
+                paragraphElement.classList.add(customClasses[i]);
+
             // Fade in paragraph after a short delay
             showAfter(delay, paragraphElement);
             delay += 200.0;
@@ -160,10 +201,13 @@
                 event.preventDefault();
 
                 // Remove all existing choices
-                removeAll("p.choice");
+                removeAll(".choice");
 
                 // Tell the story where to go next
                 story.ChooseChoiceIndex(choice.index);
+
+                // This is where the save button will save from
+                savePoint = story.state.toJson();
 
                 // Aaand loop
                 continueStory();
@@ -183,6 +227,9 @@
         story.ResetState();
 
         setVisible(".header", true);
+
+        // set save point to here
+        savePoint = story.state.toJson();
 
         continueStory(true);
 
@@ -271,6 +318,90 @@
         }
 
         return null;
+    }
+
+    // Loads save state if exists in the browser memory
+    function loadSavePoint() {
+
+        try {
+            let savedState = window.localStorage.getItem('save-state');
+            if (savedState) {
+                story.state.LoadJson(savedState);
+                return true;
+            }
+        } catch (e) {
+            console.debug("Couldn't load save state");
+        }
+        return false;
+    }
+
+    // Detects which theme (light or dark) to use
+    function setupTheme(globalTagTheme) {
+
+        // load theme from browser memory
+        var savedTheme;
+        try {
+            savedTheme = window.localStorage.getItem('theme');
+        } catch (e) {
+            console.debug("Couldn't load saved theme");
+        }
+
+        // Check whether the OS/browser is configured for dark mode
+        var browserDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+        if (savedTheme === "dark"
+            || (savedTheme == undefined && globalTagTheme === "dark")
+            || (savedTheme == undefined && globalTagTheme == undefined && browserDark))
+            document.body.classList.add("dark");
+    }
+
+    // Used to hook up the functionality for global functionality buttons
+    function setupButtons(hasSave) {
+
+        let rewindEl = document.getElementById("rewind");
+        if (rewindEl) rewindEl.addEventListener("click", function(event) {
+            removeAll("p");
+            removeAll("img");
+            setVisible(".header", false);
+            restart();
+        });
+
+        let saveEl = document.getElementById("save");
+        if (saveEl) saveEl.addEventListener("click", function(event) {
+            try {
+                window.localStorage.setItem('save-state', savePoint);
+                document.getElementById("reload").removeAttribute("disabled");
+                window.localStorage.setItem('theme', document.body.classList.contains("dark") ? "dark" : "");
+            } catch (e) {
+                console.warn("Couldn't save state");
+            }
+
+        });
+
+        let reloadEl = document.getElementById("reload");
+        if (!hasSave) {
+            reloadEl.setAttribute("disabled", "disabled");
+        }
+        reloadEl.addEventListener("click", function(event) {
+            if (reloadEl.getAttribute("disabled"))
+                return;
+
+            removeAll("p");
+            removeAll("img");
+            try {
+                let savedState = window.localStorage.getItem('save-state');
+                if (savedState) story.state.LoadJson(savedState);
+            } catch (e) {
+                console.debug("Couldn't load save state");
+            }
+            continueStory(true);
+        });
+
+        let themeSwitchEl = document.getElementById("theme-switch");
+        if (themeSwitchEl) themeSwitchEl.addEventListener("click", function(event) {
+            document.body.classList.add("switched");
+            document.body.classList.toggle("dark");
+        });
     }
 
 })(storyContent);
